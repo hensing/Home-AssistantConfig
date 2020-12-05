@@ -1,0 +1,8 @@
+fenix:
+  entities:
+    - light.wohnzimmer
+    - light.arbeitszimmer
+    - light.schlafzimmer
+    - lock.henning_s_wohnung
+    - lock.beringstr_17
+    - climate.wohnzimmer

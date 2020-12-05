@@ -1,0 +1,17 @@
+light.group_for_wakeup:
+  hidden: true
+switch.waschmaschine:
+  assumed_state: true
+switch.trockner:
+  assumed_state: true
+binary_sensor.badezimmer_access_control_door_window_open_2:
+  friendly_name: Badezimmer
+  device_class: window
+sensor.zuhause_tado_bridge_status:
+  entity_picture: https://static.ubnt.com/fingerprint/0/3128_129x129.png
+binary_sensor.nuki_bridge_online:
+  entity_picture: https://static.ubnt.com/fingerprint/0/3593_129x129.png
+binary_sensor.hue_bridge_online:
+  entity_picture: https://static.ubnt.com/fingerprint/0/2014_129x129.png
+binary_sensor.truenas_server_online:
+  icon: mdi:freebsd

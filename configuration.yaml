@@ -1,0 +1,82 @@
+homeassistant:
+  # Name of the location where Home Assistant is running
+  name: Home
+  # Location required to calculate the time the sun rises and sets
+  latitude: !secret ha_latitude
+  longitude: !secret ha_longitude
+  # Impacts weather/sunrise data (altitude above sea level in meters)
+  elevation: 61
+  # metric for Metric, imperial for Imperial
+  unit_system: metric
+  # Pick yours from here: http://en.wikipedia.org/wiki/List_of_tz_database_time_zones
+  time_zone: Europe/Berlin
+  # Customization file
+  customize: !include customize.yaml
+  # configure urls
+  external_url: !secret ha_external_url
+  internal_url: !secret ha_internal_url
+  packages: !include_dir_named packages
+
+
+# Configure a default setup of Home Assistant (frontend, api, etc)
+default_config:
+
+# Show the introduction message on startup.
+# introduction:
+
+# Track the sun
+sun:
+
+# Discover some devices automatically
+discovery:
+
+# Text to speech
+tts:
+  - platform: google_translate
+    service_name: google_say
+
+# enable nuki
+lock:
+  - platform: nuki
+    host: 192.168.5.8
+    port: 8080
+    token: !secret nuki_password
+
+tado:
+    username: !secret tado_user
+    password: !secret tado_password
+
+device_tracker:
+  - platform: tado
+    username: !secret tado_user
+    password: !secret tado_password
+    home_id: !secret tado_home_id
+    consider_home: 120
+    interval_seconds: 120
+    
+
+notify:
+  name: pushover
+  platform: pushover
+  api_key: !secret pushover_api_key
+  user_key: !secret pushover_user_key
+
+timer:
+  trockner_notification:
+    name: Mute notification Trockner
+    duration: 600
+  waesche_notification:
+    name: Mute notification WM
+    duration: 600
+
+media_player:
+  - platform: philips_android_tv
+    name: Wohnzimmer TV
+    host: 192.168.3.128
+    mac: !secret android_tv_mac
+    username: !secret android_tv_username
+    password: !secret android_tv_password
+
+group: !include groups.yaml
+automation: !include automations.yaml
+script: !include scripts.yaml

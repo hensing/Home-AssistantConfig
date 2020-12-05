@@ -1,0 +1,175 @@
+- id: '1554545203875'
+  alias: Trigger Sonoff on startup
+  trigger:
+  - event: start
+    platform: homeassistant
+  condition: []
+  action:
+  - data:
+      payload: '1'
+      topic: sonoffs/cmnd/SetOption19
+    service: mqtt.publish
+  - delay: '10'
+  - data:
+      payload: ''
+      topic: sonoffs/cmnd/state
+    service: mqtt.publish
+- id: '1554548393893'
+  alias: Waschmaschine fertig
+  trigger:
+  - below: '5'
+    entity_id: sensor.waschmaschine_energy_power
+    for: 00:00:30
+    platform: numeric_state
+  condition:
+  - condition: state
+    entity_id: switch.waschmaschine
+    state: 'on'
+  - condition: and
+    conditions:
+    - condition: state
+      entity_id: timer.waesche_notification
+      state: idle
+  action:
+  - data:
+      data:
+        priority: -1
+      message: Die Wäsche ist fertig!
+      title: Waschmaschine
+    service: notify.pushover
+  - entity_id: timer.waesche_notification
+    service: timer.start
+- id: '1554551157438'
+  alias: Licht aus beim abschließen
+  trigger:
+  - entity_id: lock.henning_zuhause
+    platform: state
+    to: locked
+  condition: []
+  action:
+  - service: light.turn_off
+- id: '1554841746516'
+  alias: Trockner fertig
+  trigger:
+  - below: '100'
+    entity_id: sensor.trockner_energy_power
+    for: 00:01:30
+    platform: numeric_state
+  condition:
+  - condition: state
+    entity_id: switch.trockner
+    state: 'on'
+  - condition: and
+    conditions:
+    - condition: state
+      entity_id: timer.trockner_notification
+      state: idle
+  action:
+  - data:
+      data:
+        priority: -1
+      message: Der Trockner ist fertig!
+      title: Trockner
+    service: notify.pushover
+  - entity_id: timer.trockner_notification
+    service: timer.start
+- id: plants_not_ok
+  alias: Blumen Alarm
+  trigger:
+  - entity_id:
+    - plant.bad
+    - plant.wohnzimmer
+    - plant.treppenhaus
+    for: 00:30:00
+    from: ok
+    platform: state
+    to: problem
+  action:
+  - data_template:
+      data:
+        priority: 0
+      message: 'Die Blume im {{ trigger.to_state.attributes.friendly_name.split()[-1]
+        }} braucht Aufmerksamkeit:
+
+        Feuchtigkeit: {{ trigger.to_state.attributes.moisture }} %
+
+        Temperatur: {{ trigger.to_state.attributes.temperature }} °C
+
+        Leitfähigkeit {{ trigger.to_state.attributes.conductivity }} µS/cm
+
+        Licht {{ trigger.to_state.attributes.brightness }} lux
+
+        Batterie {{ trigger.to_state.attributes.battery }} %
+
+        '
+      title: ❀ Blumen gießen!
+    service: notify.pushover
+- id: '1565543730784'
+  alias: letsencrypt neu
+  trigger:
+  - at: 01:23:45
+    platform: time
+  condition: []
+  action:
+  - data:
+      addon: core_letsencrypt
+    service: hassio.addon_restart
+- id: '1591996644405'
+  alias: Kühlschrank zu warm
+  description: ''
+  trigger:
+  - above: '7'
+    entity_id: sensor.kuhlschrank_temperature
+    for: 0:01:00
+    platform: numeric_state
+  condition: []
+  action:
+  - data:
+      data:
+        priority: 1
+      message: Der Kühlschrank hat eine Temperatur von {{ states('sensor.kuhlschrank_temperature')
+        }}°C.
+      title: Achtung! Der Kühlschrank ist zu warm!
+    service: notify.pushover
+  mode: single
+- id: motion_alert_when_not_home
+  alias: Bewegungsalarm bei Abwesenheit
+  trigger:
+  - entity_id:
+    - binary_sensor.wohnzimmer_sensor_1_motion
+    - binary_sensor.wohnzimmer_sensor_2_motion
+    - binary_sensor.arbeitszimmer_sensor_motion
+    - binary_sensor.schlafzimmer_sensor_motion
+    platform: state
+    to: 'on'
+  condition:
+  - condition: state
+    entity_id: person.henning_dickten
+    state: not_home
+  action:
+  - data_template:
+      message: '{{ trigger.to_state.attributes.friendly_name}} hat eine Bewegung erkannt!'
+      title: Bewegung im {{ trigger.to_state.attributes.friendly_name.split()[0] }}
+      data:
+        priority: 1
+    service: notify.pushover
+- id: '1607174382738'
+  alias: Heizung aus wenn Fenster auf
+  description: ''
+  trigger:
+  - type: turned_on
+    platform: device
+    device_id: e2dcddb1bbbc68796111715aecef150f
+    entity_id: binary_sensor.balkontur_access_control_door_window_open
+    domain: binary_sensor
+    for:
+      hours: 0
+      minutes: 1
+      seconds: 0
+  condition: []
+  action:
+  - service: climate.set_hvac_mode
+    data:
+      hvac_mode: 'off'
+    entity_id: climate.bad
+  mode: single

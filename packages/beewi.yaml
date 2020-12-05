@@ -1,0 +1,11 @@
+--- 
+#-- beewi bluetooth temperature sensors
+#
+sensor:
+  - platform: beewi_smartclim
+    mac: '20:91:48:48:EB:25'
+    name: Kühlschrank
+  - platform: beewi_smartclim
+    mac: '20:91:48:48:E4:E9'
+    name: Aussen
+

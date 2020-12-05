@@ -1,0 +1,26 @@
+---
+
+#--- Sensoren für Bridges
+
+binary_sensor:
+  #--- hue
+- platform: command_line
+  name: 'Hue Bridge Online'
+  command: response=$(curl -LIk -m 3 http://192.168.5.11/ -o /dev/null -w "%{http_code}\n" -s); test "$response" -ge 200 && echo "ON" || echo "OFF" 
+  scan_interval: 300
+  device_class: connectivity
+
+  #---nuki
+- platform: command_line
+  name: 'Nuki Bridge Online'
+  command: response=$(curl -LIk -m 3 http://192.168.5.8:8080 -o /dev/null -w "%{http_code}\n" -s); test "$response" -ge 200 && echo "ON" || echo "OFF" 
+  scan_interval: 300
+  device_class: connectivity
+
+  #--- cassius
+- platform: command_line
+  name: 'TrueNAS Server Online'
+  command: response=$(curl -LIk -m 3 http://192.168.1.11/ -o /dev/null -w "%{http_code}\n" -s); test "$response" -ge 200 && echo "ON" || echo "OFF" 
+  scan_interval: 300
+  device_class: connectivity
+  

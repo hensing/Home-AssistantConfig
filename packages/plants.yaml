@@ -1,0 +1,72 @@
+--- 
+#-- miflora plant sensors
+#
+sensor:
+  - platform: miflora
+    mac: 'C4:7C:8D:6A:E9:63'
+    name: Blume Wohnzimmer
+    force_update: false
+    median: 3
+    monitored_conditions:
+      - moisture
+      - light
+      - temperature
+      - conductivity
+      - battery
+  - platform: miflora
+    mac: 'C4:7C:8D:6A:E8:14'
+    name: Blume Treppenhaus
+    force_update: false
+    median: 3
+    monitored_conditions:
+      - moisture
+      - light
+      - temperature
+      - conductivity
+      - battery
+  - platform: miflora
+    mac: 'C4:7C:8D:6A:E8:3B'
+    name: Blume Bad
+    force_update: false
+    median: 3
+    monitored_conditions:
+      - moisture
+      - light
+      - temperature
+      - conductivity
+      - battery
+
+#-- plants
+#
+plant:
+  wohnzimmer:
+    sensors:
+      moisture: sensor.blume_wohnzimmer_moisture
+      temperature: sensor.blume_wohnzimmer_temperature
+      conductivity: sensor.blume_wohnzimmer_conductivity
+      brightness: sensor.blume_wohnzimmer_light_intensity
+      battery: sensor.blume_wohnzimmer_battery
+    min_moisture: 20
+    max_moisture: 80
+    min_conductivity: 75
+  bad:
+    sensors:
+      moisture: sensor.blume_bad_moisture
+      temperature: sensor.blume_bad_temperature
+      conductivity: sensor.blume_bad_conductivity
+      brightness: sensor.blume_bad_light_intensity
+      battery: sensor.blume_bad_battery
+    min_moisture: 20
+    max_moisture: 80
+    min_conductivity: 75
+  treppenhaus:
+    sensors:
+      moisture: sensor.blume_treppenhaus_moisture
+      temperature: sensor.blume_treppenhaus_temperature
+      conductivity: sensor.blume_treppenhaus_conductivity
+      brightness: sensor.blume_treppenhaus_light_intensity
+      battery: sensor.blume_treppenhaus_battery
+    min_moisture: 20
+    max_moisture: 80
+    min_conductivity: 75
+
