@@ -1,0 +1,17 @@
+# ignore everything
+*
+
+# except for config and documentations
+!*.yaml
+!.gitignore
+!*.md
+
+# ignore storage
+.storage
+.cloud
+.google.token
+
+# ignore secrets and personal data
+ip_bans.yaml
+secrets.yaml
+known_devices.yaml

@@ -104,16 +104,6 @@
         '
       title: ❀ Blumen gießen!
     service: notify.pushover
-- id: '1565543730784'
-  alias: letsencrypt neu
-  trigger:
-  - at: 01:23:45
-    platform: time
-  condition: []
-  action:
-  - data:
-      addon: core_letsencrypt
-    service: hassio.addon_restart
 - id: '1591996644405'
   alias: Kühlschrank zu warm
   description: ''
@@ -136,15 +126,22 @@
   alias: Bewegungsalarm bei Abwesenheit
   trigger:
   - entity_id:
-    - binary_sensor.wohnzimmer_sensor_1_motion
-    - binary_sensor.wohnzimmer_sensor_2_motion
+    - binary_sensor.wohnzimmer_sensor_motion
+    - binary_sensor.esszimmer_sensor_motion
+    - binary_sensor.kuche_sensor_motion
+    - binary_sensor.bad_sensor_motion
+    - binary_sensor.treppe_sensor_motion
     - binary_sensor.arbeitszimmer_sensor_motion
     - binary_sensor.schlafzimmer_sensor_motion
+    - binary_sensor.gartenhaus_sensor_motion
     platform: state
     to: 'on'
   condition:
   - condition: state
     entity_id: person.henning_dickten
+    state: not_home
+  - condition: state
+    entity_id: person.jose
     state: not_home
   action:
   - data_template:
@@ -153,6 +150,7 @@
       data:
         priority: 1
     service: notify.pushover
+  mode: single
 - id: '1607174382738'
   alias: Heizung aus wenn Fenster auf
   description: ''
@@ -172,4 +170,28 @@
     data:
       hvac_mode: 'off'
     entity_id: climate.bad
+  mode: single
+- id: '1609312769418'
+  alias: 'Musik aus '
+  description: ''
+  trigger:
+  - platform: time
+    at: '12:00'
+  condition: []
+  action:
+  - service: media_player.media_stop
+    data: {}
+    entity_id: media_player.heos_kueche
+  mode: single
+- id: '1609694248181'
+  alias: Hue Workday setzen
+  description: ''
+  trigger:
+  - platform: time
+    at: 00:00
+  condition: []
+  action:
+  - service: '{% if is_state(''binary_sensor.workday_sensor'', ''on'') %} switch.turn_on{%
+      else %}  switch.turn_off{% endif %}'
+    entity_id: switch.hue_workday
   mode: single
