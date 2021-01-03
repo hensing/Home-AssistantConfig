@@ -15,3 +15,10 @@ binary_sensor.hue_bridge_online:
   entity_picture: https://static.ubnt.com/fingerprint/0/2014_129x129.png
 binary_sensor.truenas_server_online:
   icon: mdi:freebsd
+media_player.wohnzimmer_tv:
+  assumed_state: 'false'
+binary_sensor.esszimmer_fenster_sensor_3: {}
+binary_sensor.kitchen_window:
+  device_class: window
+binary_sensor.esszimmer_fenster:
+  device_class: window
